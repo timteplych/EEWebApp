@@ -1,0 +1,46 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Categories List</title>
+</h:head>
+
+<h:body>
+    <h:form id="form">
+        <p:growl id="msgs" showDetail="true"/>
+        <p:dataTable id="categoryTable" var="category" value="#{categories.categoryList}" editable="true" widgetVar="categoryTable" style="margin-bottom:20px">
+            <f:facet name="header">
+                Categories editing
+            </f:facet>
+
+            <p:ajax event="rowEdit" listener="#{categories.onRowEdit}" update=":form:msgs" />
+            <p:ajax event="rowEditCancel" listener="#{categories.onRowCancel}" update=":form:msgs" />
+
+            <p:column headerText="Name">
+                <p:cellEditor>
+                    <f:facet name="output"><h:outputText value="#{category.name}" /></f:facet>
+                    <f:facet name="input"><p:inputText value="#{category.name}" style="width:100%" label="Name"/></f:facet>
+                </p:cellEditor>
+            </p:column>
+
+            <p:column style="width:32px">
+                <p:rowEditor />
+            </p:column>
+            <p:column>
+                <p:commandLink id="ajax" update=":form:msgs categoryTable" action="#{categories.deleteAction(category)}"  style="margin-right:20px;">
+                    <h:outputText value="Delete" />
+                </p:commandLink>
+            </p:column>
+        </p:dataTable>
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <p:commandButton value="Add new category" styleClass="ui-priority-primary" process="@this" update=":form:msgs"
+                                 action="#{categories.onAddNew}" oncomplete="PF('categoryTable').addRow();"/>
+            </div>
+        </div>
+    </h:form>
+</h:body>
+</html>
