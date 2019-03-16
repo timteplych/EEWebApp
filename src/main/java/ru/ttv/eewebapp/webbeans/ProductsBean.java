@@ -2,20 +2,22 @@ package ru.ttv.eewebapp.webbeans;
 
 import org.primefaces.event.CellEditEvent;
 import org.primefaces.event.RowEditEvent;
+import ru.ttv.eewebapp.interceptors.UserActionLogger;
 import ru.ttv.eewebapp.model.Product;
 import ru.ttv.eewebapp.repository.CategoriesRepository;
 import ru.ttv.eewebapp.repository.ProductRepository;
 
+import javax.ejb.Stateless;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import javax.inject.Named;
+import javax.interceptor.Interceptors;
 import java.math.BigDecimal;
 import java.util.Collection;
 
-@ManagedBean(name = "products")
-@SessionScoped
+@Named("products")
+@Stateless
 public class ProductsBean {
 
     @Inject
@@ -68,6 +70,7 @@ public class ProductsBean {
         return "/product.xhtml?faces-redirect=true"; // возвращаем адрес страницы на которую переходим для редактирования
     }
 
+    @Interceptors({UserActionLogger.class})
     public void deleteAction(Product product) {
         productRepository.remove(product.getId());
     }
@@ -87,6 +90,7 @@ public class ProductsBean {
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
 
+    @Interceptors({UserActionLogger.class})
     public void onAddNew() {
         // Add one new car to the table:
         Product productAdd = new Product();

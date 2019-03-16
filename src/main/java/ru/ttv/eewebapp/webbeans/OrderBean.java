@@ -4,15 +4,15 @@ import org.primefaces.event.RowEditEvent;
 import ru.ttv.eewebapp.model.Order;
 import ru.ttv.eewebapp.repository.OrderRepository;
 
+import javax.ejb.Stateless;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.util.Collection;
 
-@ManagedBean(name = "orders")
-@SessionScoped
+@Named("orders")
+@Stateless
 public class OrderBean {
 
     @Inject
