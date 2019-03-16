@@ -1,20 +1,31 @@
 package ru.ttv.eewebapp.model;
 
-public class Order {
-    private String id;
+import javax.persistence.*;
 
+@Entity
+@Table(name = "Orders")
+public class Order {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    @Column(name = "description")
     private String description;
 
-    public Order(String id, String description) {
+    public Order() {
+    }
+
+    public Order(long id, String description) {
         this.id = id;
         this.description = description;
     }
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 

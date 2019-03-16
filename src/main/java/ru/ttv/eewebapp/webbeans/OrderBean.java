@@ -20,11 +20,11 @@ public class OrderBean {
 
     private Order order;
 
-    public String getId() {
+    public long getId() {
         return order.getId();
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         order.setId(id);
     }
 
@@ -54,28 +54,28 @@ public class OrderBean {
     }
 
     public void deleteAction(Order order) {
-        orderRepository.delete(order);
+        orderRepository.remove(order.getId());
     }
 
     public String saveOrder() {
-        orderRepository.save(order);
+        orderRepository.merge(order);
         return "/index.xhtml?faces-redirect=true"; // после сохранения продукта возвращаемся на главную страницу
     }
 
     public void onRowEdit(RowEditEvent event) {
-        FacesMessage msg = new FacesMessage("Order Edited", ((Order) event.getObject()).getId());
+        FacesMessage msg = new FacesMessage("Order Edited", String.valueOf(((Order) event.getObject()).getId()));
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
 
     public void onRowCancel(RowEditEvent event) {
-        FacesMessage msg = new FacesMessage("Edit Cancelled", ((Order) event.getObject()).getId());
+        FacesMessage msg = new FacesMessage("Edit Cancelled", String.valueOf(((Order) event.getObject()).getId()));
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
 
     public void onAddNew() {
-        Order categoryAdd = new Order("","title");
-        orderRepository.add(categoryAdd);
-        FacesMessage msg = new FacesMessage("New Order added", categoryAdd.getId());
+        Order orderAdd = new Order();
+        orderRepository.merge(orderAdd);
+        FacesMessage msg = new FacesMessage("New Order added", String.valueOf(orderAdd.getId()));
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
 }

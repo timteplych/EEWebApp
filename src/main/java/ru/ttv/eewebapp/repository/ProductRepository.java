@@ -2,53 +2,41 @@ package ru.ttv.eewebapp.repository;
 
 import ru.ttv.eewebapp.model.Product;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Named;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import java.io.Serializable;
 import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
-@Named
-@ApplicationScoped
-public class ProductRepository {
-    private Map<String, Product> productMap = new LinkedHashMap<>();
-
-    public ProductRepository() {
-        this.add(new Product("1", "Pen", 50));
-        this.add(new Product("2", "Pencil", 150));
-        this.add(new Product("3", "Textbook", 200));
-        this.add(new Product("4", "Paper", 500));
-        this.add(new Product("5", "Pen", 50));
-        this.add(new Product("6", "Eraser", 150));
-        this.add(new Product("7", "Marker", 200));
-        this.add(new Product("8", "Sticks", 500));
-        this.add(new Product("9", "Brash", 50));
-        this.add(new Product("10", "Pencil", 150));
-        this.add(new Product("11", "Textbook", 200));
-        this.add(new Product("12", "Paper", 500));
-        this.add(new Product("13", "Pen", 50));
-        this.add(new Product("14", "Pencil", 150));
-        this.add(new Product("15", "Textbook", 200));
-        this.add(new Product("16", "Paper", 500));
+@Stateless
+@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+public class ProductRepository extends AbstractRepository<Product> implements Serializable {
+    @Override
+    public Product getById(long id) {
+        return entityManager.find(Product.class, id);
     }
 
+    @Override
     public Collection<Product> getAll() {
-        return productMap.values();
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Product> query = builder.createQuery(Product.class);
+        Root<Product> from = query.from(Product.class);
+        query.select(from);
+        return entityManager.createQuery(query).getResultList();
     }
 
-    public Product getById(String id) {
-        return productMap.get(id);
+    @SuppressWarnings("unchecked")
+    public Collection<Product> getByCategory(long categoryId){
+        return entityManager.createQuery("select p from Product p where p.category.id = :id")
+                .setParameter("id",categoryId).getResultList();
     }
 
-    public void add(Product product) {
-        productMap.put(product.getId(), product);
-    }
-
-    public void save(Product product) {
-        productMap.put(product.getId(), product);
-    }
-
-    public void delete(Product product) {
-        productMap.remove(product.getId());
+    public Collection<Product> getAllLowPrice(){
+        Query query = entityManager.createNamedQuery("Product.findAllLowPrice",Product.class);
+        return query.getResultList();
     }
 }

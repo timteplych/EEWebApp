@@ -1,20 +1,40 @@
 package ru.ttv.eewebapp.model;
 
-public class Category {
-    private String id;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
+@Entity
+@Table(name = "Categories")
+public class Category {
+
+    @Id
+    @NotNull
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    @NotNull
+    @Column(name = "name")
     private String name;
 
-    public Category(String id, String name) {
-        this.id = id;
+    @OneToMany(
+            mappedBy = "category",
+            orphanRemoval = true,
+            cascade = CascadeType.ALL)
+    private List<Product> products;
+
+    public Category() {
+    }
+
+    public Category(String name) {
         this.name = name;
     }
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -24,5 +44,13 @@ public class Category {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
     }
 }
