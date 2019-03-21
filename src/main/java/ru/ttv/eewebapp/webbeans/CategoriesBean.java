@@ -11,12 +11,15 @@ import javax.ejb.TransactionAttributeType;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.util.Collection;
 
 
+@Named("categories")
 @Stateless
 @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 public class CategoriesBean {
+
     @Inject
     private CategoriesRepository categoryRepository;
 

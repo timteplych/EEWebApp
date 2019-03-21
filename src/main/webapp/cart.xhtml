@@ -5,19 +5,16 @@
       xmlns:p="http://primefaces.org/ui">
 
 <h:head>
-    <title>Product List</title>
+    <title>Shopping Cart</title>
 </h:head>
 
 <h:body>
     <h:form id="form">
         <p:growl id="msgs" showDetail="true"/>
-        <p:dataTable id="productTable" var="product" value="#{products.productList}" editable="true" widgetVar="productTable" style="margin-bottom:20px">
+        <p:dataTable id="productTable" var="product" value="#{shoppingCart.all}" editable="true" widgetVar="productTable" style="margin-bottom:20px">
             <f:facet name="header">
-                Product editing
+                Shopping Cart
             </f:facet>
-
-            <p:ajax event="rowEdit" listener="#{products.onRowEdit}" update=":form:msgs" />
-            <p:ajax event="rowEditCancel" listener="#{products.onRowCancel}" update=":form:msgs" />
 
             <p:column headerText="Name">
                 <p:cellEditor>
@@ -38,21 +35,11 @@
                 <p:rowEditor />
             </p:column>
             <p:column>
-                <p:commandLink id="ajax" update=":form:msgs productTable" action="#{products.deleteAction(product)}"  style="margin-right:20px;">
+                <p:commandLink id="ajax" update=":form:msgs productTable" action="#{shoppingCart.deleteFromCart(product)}"  style="margin-right:20px;">
                     <h:outputText value="Delete" />
-                </p:commandLink>
-                <p:commandLink id="ajax1" update=":form:msgs productTable" action="#{shoppingCart.addToCart(product)}"  style="margin-right:20px;">
-                    <h:outputText value="Add to cart" />
                 </p:commandLink>
             </p:column>
         </p:dataTable>
-        <div class="ui-g">
-            <div class="ui-g-12">
-                <p:commandButton value="Add new product" styleClass="ui-priority-primary" process="@this" update=":form:msgs"
-                                 action="#{products.onAddNew}" oncomplete="PF('productTable').addRow();"/>
-            </div>
-        </div>
-        <p:commandButton value="Validate" update="productTable" icon="pi pi-check" validateClient="true" style="margin-right:10px"/>
     </h:form>
 </h:body>
 </html>
