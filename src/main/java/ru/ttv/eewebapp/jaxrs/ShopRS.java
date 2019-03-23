@@ -8,6 +8,7 @@ import ru.ttv.eewebapp.jaxrs.representation.ProductRepresentation;
 import ru.ttv.eewebapp.jaxrs.service.CategoriesService;
 import ru.ttv.eewebapp.jaxrs.service.ProductService;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -32,6 +33,7 @@ public class ShopRS  {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_HTML)
     @ApiOperation(value = "Add new product")
+    @RolesAllowed("admin")
     public Response addProduct(@ApiParam(value = "New product to add") ProductRepresentation product){
         long id = productService.addProduct(product);
         return Response.accepted(String.format("New product with id %d created", id)).build();
@@ -40,6 +42,7 @@ public class ShopRS  {
     @DELETE
     @Path("/products/{id}")
     @ApiOperation(value = "Delete product")
+    @RolesAllowed("admin")
     public Response deleteProduct(@ApiParam(name = "id", value = "Product id to delete") @PathParam("id") long id) {
         productService.removeProduct(id);
         return Response.accepted().build();
@@ -50,6 +53,7 @@ public class ShopRS  {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_HTML)
     @ApiOperation(value = "Add new category")
+    @RolesAllowed("admin")
     public Response addCategory(@ApiParam(value = "New category to add") CategoryRepresentation category){
         long id = categoriesService.addCategory(category);
         return Response.accepted(String.format("New category with id %d created", id)).build();
