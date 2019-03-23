@@ -20,6 +20,11 @@ public class ProductRepository extends AbstractRepository<Product> implements Se
         return entityManager.find(Product.class, id);
     }
 
+    public Product getByName(String name){
+        return (Product) entityManager.createQuery("select p from Product p where p.name= :name ")
+                .setParameter("name", name).setMaxResults(1).getSingleResult();
+    }
+
     @Override
     public Collection<Product> getAll() {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
@@ -38,5 +43,10 @@ public class ProductRepository extends AbstractRepository<Product> implements Se
     public Collection<Product> getAllLowPrice(){
         Query query = entityManager.createNamedQuery("Product.findAllLowPrice",Product.class);
         return query.getResultList();
+    }
+
+    public long count() {
+        return (Long) entityManager.createQuery("select count(*) from Product p")
+                .getSingleResult();
     }
 }
